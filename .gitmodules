@@ -1,3 +1,0 @@
-[submodule "third_party/qtscriptgenerator"]
-	path = third_party/qtscriptgenerator
-	url = git://gitorious.org/qt-labs/qtscriptgenerator.git
