@@ -144,13 +144,27 @@ void JSXLoader::runScript()
 
         // Load Script and Run
         QScriptValue globalObject = engine->globalObject();
+        QScriptValue qtGlobalObject = engine->newObject();
 
         QScriptValue dirpathobj = scriptDir.path();
         QScriptValue scriptpathobj = scriptPath;
         QScriptValue qappobj = engine->newQObject(qApp);
-        globalObject.setProperty("__DIR__", dirpathobj);
-        globalObject.setProperty("__JS_FILE__", scriptpathobj);
-        globalObject.setProperty("qApp", qappobj);
+
+        QScriptValue argv = engine->newArray();
+        argv.setProperty(0, QScriptValue(qApp->arguments().at(0)));
+        argv.setProperty(1, QScriptValue(scriptPath));
+        for (int i = 1; i < qApp->arguments().size(); i++) {
+            argv.setProperty(i + 1, QScriptValue(qApp->arguments().at(i)));
+        }
+        qtGlobalObject.setProperty("dir", dirpathobj);
+        qtGlobalObject.setProperty("jsfile", scriptpathobj);
+        qtGlobalObject.setProperty("qApp", qappobj);
+        qtGlobalObject.setProperty("argv", argv);
+
+        globalObject.setProperty("qtGlobal", qtGlobalObject);
+        QScriptValue process = engine->newObject();
+        process.setProperty("argv", argv);
+        globalObject.setProperty("process", process);
 
         QFile scriptFile(scriptPath);
         scriptFile.open(QIODevice::ReadOnly);

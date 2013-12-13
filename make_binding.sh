@@ -22,8 +22,10 @@ else
     qmake
 fi
 make -j 4
+
 rm -rf generated_cpp
 ./generator --include-paths=${QTDIR}/lib/
+
 cd ../qtbindings
 rm -rf */Makefile*
 rm -rf */release
@@ -47,5 +49,9 @@ cd ../../..
 if [ -d ${OUTPUT} ]; then
     rm -rf ./${OUTPUT}
 fi
+if [ -d qtjsx ]; then
+    rm -rf ./qtjsx
+fi
 
 cp -R third_party/qtscriptgenerator/plugins ./${OUTPUT}
+cp -R third_party/qtscriptgenerator/jsx ./qtjsx

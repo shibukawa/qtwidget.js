@@ -368,11 +368,12 @@ Dialog.prototype.errorMessage = function()
 };
 
 (function() {
+    console.log(process.argv);
     var translatorFileName = "qt_";
     translatorFileName += QLocale.system().name();
-    var translator = new QTranslator(qApp);
+    var translator = new QTranslator(qtGlobal.qApp);
     if (translator.load(translatorFileName, QLibraryInfo.location(QLibraryInfo.TranslationsPath)))
-        qApp.installTranslator(translator);
+        qtGlobal.qApp.installTranslator(translator);
 
     var dialog = new Dialog();
     return dialog.exec();
