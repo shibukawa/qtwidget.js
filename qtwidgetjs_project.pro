@@ -4,20 +4,20 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets script scripttools
 
-TARGET = qtwidgetjs_project
+TARGET = qtwidgetjs
 TEMPLATE = app
-
-folder_01.source = js_src
-folder_01.target = .
-folder_02.source = plugins
-folder_02.target = .
-DEPLOYMENTFOLDERS = folder_01 folder_02
-
-
 SOURCES +=  cpp_src/main.cpp \
-            cpp_src/qtscript_support.cpp
+            cpp_src/jsxloader.cpp
 
-HEADERS +=  cpp_src/qtscript_support.h
+HEADERS +=  cpp_src/jsxloader.h
 
+macx {
+    CONFIG += app_bundle
+    QMAKE_POST_LINK += $$quote(cp -R $${PWD}/js_src $${OUT_PWD}/$${TARGET}.app/Contents/Resources/);
+    QMAKE_POST_LINK += $$quote(cp -R $${PWD}/plugins $${OUT_PWD}/$${TARGET}.app/Contents/Resources/);
+}
+
+OTHER_FILES += \
+    js_src/main.js
