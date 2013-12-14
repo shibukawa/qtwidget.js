@@ -116,6 +116,8 @@ void JSXLoader::runScript()
     QDir pluginDir(QCoreApplication::applicationDirPath());
     QDir scriptDir(QCoreApplication::applicationDirPath());
 
+    std::cout << QCoreApplication::applicationDirPath().toStdString() << std::endl;
+
     if (resolveDir(pluginDir, scriptDir))
     {
         this->engine = new QScriptEngine();
@@ -189,6 +191,7 @@ void JSXLoader::runScript()
 void JSXLoader::loadExtensions(QDir &pluginDir)
 {
     QCoreApplication* app = dynamic_cast<QCoreApplication*>(parent());
+    std::cout << "library path: " << pluginDir.absolutePath().toStdString() << std::endl;
     app->addLibraryPath(pluginDir.absolutePath());
     QDir scriptDir(pluginDir.filePath("script"));
     QStringList files = scriptDir.entryList(QDir::Files | QDir::NoSymLinks);
@@ -272,6 +275,15 @@ bool JSXLoader::resolveDir(QDir &pluginDir, QDir &scriptDir) const
         }
         scriptDir.cd("Resources");
     }
+    if (!pluginDir.cd("plugins"))
+    {
+        qDebug() << "Resources/plugins folder doesn't not exists.";
+        return false;
+    }
+    if (!scriptDir.cd("js_src"))
+    {
+        qDebug() << "Resources/js_src folder doesn't not exists.";
+    }
 #elif Q_OS_UNIX
     if (pluginDir.dirName() == QLatin1String("bin"))
     {
@@ -288,29 +300,31 @@ bool JSXLoader::resolveDir(QDir &pluginDir, QDir &scriptDir) const
             scriptDir.cd(appliName);
         }
     }
-#else // Windows
-    else
-    {
-        if (pluginDir.dirName() == QLatin1String("debug") || pluginDir.dirName() == QLatin1String("release"))
-        {
-            pluginDir.cdUp();
-            scriptDir.cdUp();
-        }
-        pluginDir.cdUp();
-        scriptDir.cdUp();
-        pluginDir.cdUp();
-        scriptDir.cdUp();
-    }
-#endif
     if (!pluginDir.cd("plugins"))
     {
-        qDebug() << "Resources/plugins folder doesn't not exists.";
+        qDebug() << "shared/plugins folder doesn't not exists.";
         return false;
     }
     if (!scriptDir.cd("js_src"))
     {
-        qDebug() << "Resources/js_src folder doesn't not exists.";
+        qDebug() << "shared/js_src folder doesn't not exists.";
     }
+#else // Windows
+    if (pluginDir.dirName() == QLatin1String("debug") || pluginDir.dirName() == QLatin1String("release"))
+    {
+        pluginDir.cdUp();
+        scriptDir.cdUp();
+    }
+    if (!pluginDir.cd("plugins"))
+    {
+        qDebug() << "plugins folder doesn't not exists.";
+        return false;
+    }
+    if (!scriptDir.cd("js_src"))
+    {
+        qDebug() << "js_src folder doesn't not exists.";
+    }
+#endif
 
     return true;
 }

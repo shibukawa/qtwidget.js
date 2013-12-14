@@ -5,7 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-    bool gui = true;
     bool debugger = false;
     int removeparam = 1;
     for (int i = 1; i < argc; i++)
@@ -13,7 +12,6 @@ int main(int argc, char *argv[])
         QString arg = argv[i];
         if (arg == "--console")
         {
-            gui = false;
             removeparam++;
         }
         else if (arg == "--debugger")

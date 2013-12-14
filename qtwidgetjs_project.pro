@@ -18,6 +18,10 @@ macx {
     QMAKE_POST_LINK += $$quote(cp -R $${PWD}/js_src $${OUT_PWD}/$${TARGET}.app/Contents/Resources/);
     QMAKE_POST_LINK += $$quote(cp -R $${PWD}/plugins $${OUT_PWD}/$${TARGET}.app/Contents/Resources/);
 }
+win32 {
+    QMAKE_POST_LINK += $$quote(cp -R $${PWD}/js_src $${OUT_PWD});
+    QMAKE_POST_LINK += $$quote(cp -R $${PWD}/plugins $${OUT_PWD});
+}
 
 OTHER_FILES += \
     js_src/main.js
